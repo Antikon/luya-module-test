@@ -6,7 +6,11 @@ namespace antikon\luyamoduletest\models;
 
 use luya\admin\helpers\I18n;
 use luya\admin\ngrest\base\NgRestModel;
+use luya\admin\ngrest\plugins\Color;
+use luya\admin\ngrest\plugins\SelectArray;
 use luya\admin\ngrest\plugins\SelectArrayGently;
+use luya\admin\ngrest\plugins\SortRelationArray;
+use luya\admin\ngrest\plugins\ToggleStatus;
 use luya\helpers\ArrayHelper;
 use luya\helpers\Html;
 use yii\base\InvalidArgumentException;
@@ -183,17 +187,20 @@ class People extends NgRestModel
             //'zoom_email'       => 'text',
             'email'       => 'text',
             'surname'     => 'text',
-            'name'        => 'text',
+            'name'        => 'password',
             'middle_name' => 'text',
             'gender'      => [
-                'class'     => SelectArrayGently::class,
-                'data'      => self::getGendersArray(),
-                'initValue' => 0
+                'class'     => ToggleStatus::class,
+                'cellColor' => "gender ? '#456789' : color",
+                //'data'      => self::getGendersArray(),
+
+                //'initValue' => 0
             ],
 
             'degree_id' => [
                 'class'     => SelectArrayGently::class,
                 'data'      => Degrees::getDegreesArray(),
+                'cellColor' => 'gender ? "red" : "rgba(127, 255, 76, .2)"', //'item.color', //item.degree_id + item.gender > 2 ? '#123456' : '#987654'",//'item.degree_id == 1 ? "#457884" : "#545634"',
                 'sortField' => [
                     'asc'  => ['(cdegrees.degree_short->"$.' . \Yii::$app->composition->langShortCode . '")' => SORT_ASC,],
                     'desc' => ['(cdegrees.degree_short->"$.' . \Yii::$app->composition->langShortCode . '")' => SORT_DESC,],
@@ -210,7 +217,8 @@ class People extends NgRestModel
         return [
             'degreeText',
             'fullName',
-            'emailWithLink'
+            'emailWithLink',
+            'color'
         ];
     }
 
@@ -257,6 +265,10 @@ class People extends NgRestModel
                 'html',
                 'sortField' => 'email'
             ],
+            'color' => [
+                'color',
+                'hideInList' => true
+            ]
 
         ];
     }
@@ -293,9 +305,11 @@ class People extends NgRestModel
                 [
                     'sequentialIndex',
                     'fullName',
+                    'email',
                     'emailWithLink',
                     'gender',
                     'degree_id',
+                    'color'
                 ]
             ],
             [
@@ -406,6 +420,12 @@ class People extends NgRestModel
     public function getFullName()
     {
         return self::makeFullName($this);
+    }
+
+
+    public function getColor()
+    {
+        return '#67F792';
     }
 
 

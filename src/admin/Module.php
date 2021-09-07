@@ -39,15 +39,14 @@ class Module extends \luya\admin\base\Module
     /**
      * @inheritDoc
      */
-  /*
+
     public function getAdminAssets()
     {
         return [
-            'antikon\conference\admin\assets\ConferenceAsset',
-            //'antikon\conference\admin\assets\FileUploadAsset',
+            'antikon\luyamoduletest\admin\assets\MainAsset',
         ];
     }
-*/
+
 
 
     /**
